@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_order_form" model="ir.ui.view">
+        <field name="name">sale.history</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='tax_id']"
+                   position="before">
+                <button name="action_sale_history" 
+                 type="object" title="Sales History"
+                         icon="fa-history" invisible="not id"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="sale_history_tree" model="ir.ui.view">
+        <field name="name">sale.history.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <tree create="false" default_order="order_id asc" >
+                <field name="order_id" widget="many2one"/>
+                <field name="validity_date" widget="date"/>
+                <field name="order_partner_id"/>
+                <field name="product_uom_qty"/>
+                <field name="price_unit"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_sale_history" model="ir.actions.act_window">
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="sales_history.sale_history_tree"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No sale order were made for this product yet!
+            </p>
+        </field>
+    </record>
+    
+</odoo>

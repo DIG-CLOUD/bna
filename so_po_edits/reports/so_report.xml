@@ -1,0 +1,91 @@
+<data>
+    <template id="so_report_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t[@t-set='address']" position="replace">
+            <div class="d-none"/>
+        </xpath>
+        <xpath expr="//t[@t-set='information_block']" position="replace">
+            <div class="d-none"/>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]" position="before">
+            <div class="row">
+                <div class="col-8" dir="rtl" name="address">
+                    <div>
+                        <p class="mb-0">
+                            <strong style="font-size: 14px">اسم العميل: </strong>
+                            <span t-field="doc.partner_id"/>
+                        </p>
+                        <div class="row">
+                            <div style="font-size: 14px; width:12%">
+                                <strong>العنوان:</strong>
+                            </div>
+                            <div class="col-10">
+                                <t t-if="doc.partner_id.street">
+                                    <span t-esc="doc.partner_id.street"/>
+                                </t>
+                                <t t-if="doc.partner_id.street2">
+                                    <span t-esc="doc.partner_id.street2"/>
+                                    <br/>
+                                </t>
+                                <t t-if="doc.partner_id.city">
+                                    <span t-esc="doc.partner_id.city"/>
+                                </t>
+                                <t t-if="doc.partner_id.state_id">
+                                    <span t-esc="doc.partner_id.state_id.code"/>
+                                </t>
+                                <t t-if="doc.partner_id.zip">
+                                    <span t-esc="doc.partner_id.zip"/>
+                                    <br/>
+                                </t>
+                                <t t-if="doc.partner_id.country_id">
+                                    <span t-esc="doc.partner_id.country_id.name"/>
+                                    <br/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div t-if="doc.partner_id.vat" class="mt-0" style="text-align: right">
+                        <t t-if="doc.company_id.account_fiscal_country_id.vat_label"
+                           t-out="doc.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                        <t t-else="">Tax ID</t>:
+                        <span t-field="doc.partner_id.vat"/>
+                    </div>
+                </div>
+                <div class="col-4" dir="ltr">
+                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
+                             and doc.partner_invoice_id != doc.partner_id
+                             or doc.partner_shipping_id != doc.partner_invoice_id">
+                        <strong>
+                            <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
+                                Invoicing and Shipping Address:
+                            </t>
+                            <t t-else="">
+                                Invoicing Address:
+                            </t>
+                        </strong>
+                        <div t-field="doc.partner_invoice_id"
+                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
+                            <strong>Shipping Address:</strong>
+                            <div t-field="doc.partner_shipping_id"
+                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//table/thead/tr[1]/th[1]" position="before">
+            <th name="th_no">
+                <span>
+                    التسلسل
+                </span>
+            </th>
+        </xpath>
+        <xpath expr="//table/tbody/t[2]/tr/t[1]/td[1]" position="before">
+            <td>
+                <span t-field="line.index"/>
+            </td>
+        </xpath>
+    </template>
+
+</data>

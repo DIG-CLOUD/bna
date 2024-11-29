@@ -1,0 +1,146 @@
+<data>
+    <template id="external_layout_boxed_header_inherit" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[contains(@t-attf-class,'header')]//div[hasclass('o_boxed_header')]" position="replace">
+            <div class="row mb8" dir="ltr">
+                <div class="col-5 text-left">
+                    <p>
+                        Al Moshreq Building Trading Co.
+                        <br/>
+                        Jeddah - Al Hamra - Falastin Street - KSA
+                    </p>
+                </div>
+                <div class="col-3 text-center">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                         style="max-width: 110px; max-height: 110px" alt="Logo"/>
+                </div>
+                <div class="col-4 mb4 text-right" dir="rtl">
+                    <div class="mt0 h4" t-if="company.report_header" t-field="company.report_header">Company tagline
+                    </div>
+                    <div name="company_address" class="mb4">
+                        <ul class="list-unstyled" name="company_address_list">
+                            <li t-if="company.is_company_details_empty">
+                                <span t-field="company.partner_id"
+                                      t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}">
+                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                        <strong>Company address block</strong>
+                                        <div>Contains the company address.</div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li t-else="">
+                                <span t-field="company.company_details">
+                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                        <strong>Company details block</strong>
+                                        <div>Contains the company details.</div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li t-if="not forced_vat"/>
+                            <li t-else="">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="forced_vat">US12345671</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="address_layout_inherit" inherit_id="web.address_layout">
+        <xpath expr="//t[@t-set='colclass']" position="replace">
+            <t t-set="colclass" t-value="('col-sm-8' if report_type == 'html' else 'col-8') + ' ms-auto'"/>
+        </xpath>
+        <xpath expr="//div[@t-if='address']//t[@t-if='information_block']/t[@t-set='colclass']" position="replace">
+            <t t-set="colclass" t-value="'col-8 offset-1'"/>
+        </xpath>
+        <xpath expr="//div[@t-if='address']//t[@t-if='information_block']//div[@name='information_block']"
+               position="attributes">
+            <attribute name="class">col-3</attribute>
+        </xpath>
+    </template>
+
+    <template id="invoice_report_inherit" inherit_id="l10n_sa.arabic_english_invoice">
+        <xpath expr="//t[@t-set='address']" position="replace">
+            <t t-set="address">
+                <address class="d-none" t-field="o.partner_id"
+                         t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"
+                         style="text-align: right"/>
+                <div dir="rtl">
+                    <t t-if="o.move_type in ['out_invoice','out_refund']">
+                        <p class="mb-0">
+                            <strong style="font-size: 14px">اسم العميل: </strong>
+                            <span t-field="o.partner_id"/>
+                        </p>
+                    </t>
+                    <t t-else="">
+                        <p class="mb-0">
+                            <strong style="font-size: 14px">اسم المورد: </strong>
+                            <span t-field="o.partner_id"/>
+                        </p>
+                    </t>
+                    <div class="row">
+                        <div style="font-size: 14px; width:12%">
+                            <strong>العنوان:</strong>
+                        </div>
+                        <div class="col-10">
+                            <t t-if="o.partner_id.street">
+                                <span t-esc="o.partner_id.street"/>
+                            </t>
+                            <t t-if="o.partner_id.street2">
+                                <span t-esc="o.partner_id.street2"/>
+                                <br/>
+                            </t>
+                            <t t-if="o.partner_id.city">
+                                <span t-esc="o.partner_id.city"/>
+                            </t>
+                            <t t-if="o.partner_id.state_id">
+                                <span t-esc="o.partner_id.state_id.code"/>
+                            </t>
+                            <t t-if="o.partner_id.zip">
+                                <span t-esc="o.partner_id.zip"/>
+                                <br/>
+                            </t>
+                            <t t-if="o.partner_id.country_id">
+                                <span t-esc="o.partner_id.country_id.name"/>
+                                <br/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="o.partner_id.vat" class="mt16" style="text-align: right">
+                    <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                       t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                    <t t-else="">Tax ID</t>:
+                    <span t-field="o.partner_id.vat"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-set='information_block']" position="replace">
+            <t t-set="information_block">
+                <p>
+                    <img t-if="o.l10n_sa_qr_code_str" style="display:block;"
+                         t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 80, 80)"/>
+                </p>
+            </t>
+        </xpath>
+        <xpath expr="//table/thead/tr[1]/th[9]" position="after">
+            <th name="th_no" class="text-end">
+                <span>
+                    التسلسل
+                </span>
+                <br/>
+                <span>
+                    No
+                </span>
+            </th>
+        </xpath>
+        <xpath expr="//table/tbody/t[3]/tr" position="inside">
+            <td name="th_no" class="text-end">
+                <span t-field="line.index" />
+            </td>
+        </xpath>
+    </template>
+
+</data>

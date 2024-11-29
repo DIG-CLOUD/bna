@@ -1,0 +1,13 @@
+<data>
+    <record id="action_change_invoice_journal" model="ir.actions.server">
+        <field name="name">Change Invoice Journal</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">tree</field>
+        <field name="code">
+            action = records.change_invoice_journal()
+        </field>
+    </record>
+</data>
