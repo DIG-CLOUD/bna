@@ -1,0 +1,11 @@
+<data>
+    <template id="invoice_report_inherit_sa" inherit_id="l10n_sa.arabic_english_invoice">
+        <xpath expr="//t[@t-set='information_block']//p" position="replace">
+            <p>
+                <t t-esc="o.generate_qr_code()"/>
+                <img t-att-src="image_data_uri(o.qr_code)" style="max-height: 150px; height: 80px; width: 80px"
+                     alt="QR Code"/>
+            </p>
+        </xpath>
+    </template>
+</data>
