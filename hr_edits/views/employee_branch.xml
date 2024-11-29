@@ -1,0 +1,23 @@
+<data>
+    <record id="employee_branch_tree_view" model="ir.ui.view">
+        <field name="name">employee.branch.tree.view</field>
+        <field name="model">employee.branch</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="employee_branch_action" model="ir.actions.act_window">
+        <field name="name">Employee Branch</field>
+        <field name="res_model">employee.branch</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="employee_branch_menu"
+              name="Employee Branch"
+              parent="hr.menu_config_employee"
+              sequence="15"
+              action="hr_edits.employee_branch_action"/>
+</data>
